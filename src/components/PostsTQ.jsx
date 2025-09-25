@@ -1,12 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const PostsTQ = () => {
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, isFetching, refetch } = useQuery({
     queryKey: ["posts"],
     queryFn: () => {
       return axios.get("http://localhost:4000/posts");
     },
+    // staleTime: 1000 * 30,
+    // refetchInterval: 1000,
+    // refetchIntervalInBackground: true,
+    // cacheTime: 1000 * 60 * 10,
+    enabled: false,
   });
 
   if (isLoading) {
@@ -19,12 +25,15 @@ const PostsTQ = () => {
 
   return (
     <div className="post-list">
-      {data.data.map((post) => {
+      <button onClick={refetch}>Fetch Posts</button>
+      {data?.data.map((post) => {
         return (
-          <div className="post-item" key={post.id}>
-            <h3 className="post-title">{post.title}</h3>
-            <p className="post-body">{post.body}</p>
-          </div>
+          <Link to={`/tq-posts/${post.id}`} key={post.id}>
+            <div className="post-item">
+              <h3 className="post-title">{post.title}</h3>
+              <p className="post-body">{post.body}</p>
+            </div>
+          </Link>
         );
       })}
     </div>
