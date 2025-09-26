@@ -14,6 +14,12 @@ const App = () => {
           <li>
             <NavLink to={"/tq-posts"}>TQ Posts</NavLink>
           </li>
+          <li>
+            <NavLink to={"/paginated-fruits"}>Paginate</NavLink>
+          </li>
+          <li>
+            <NavLink to={"/infinite-fruits"}>Infinite Scroll</NavLink>
+          </li>
         </ul>
       </nav>
       <Outlet />

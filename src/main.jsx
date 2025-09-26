@@ -8,6 +8,8 @@ import PostsTQ from "./components/PostsTQ.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import PostDetails from "./components/PostDetails.jsx";
+import PaginatedQueries from "./components/PaginatedQueries.jsx";
+import InfiniteQueries from "./components/InfiniteQueries.jsx";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
       {
         path: "tq-posts/:postId",
         element: <PostDetails />,
+      },
+      {
+        path: "paginated-fruits",
+        element: <PaginatedQueries />,
+      },
+      {
+        path: "infinite-fruits",
+        element: <InfiniteQueries />,
       },
     ],
   },
