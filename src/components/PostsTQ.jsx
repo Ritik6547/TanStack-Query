@@ -28,14 +28,42 @@ const PostsTQ = () => {
 
   const { mutate: addPostMutation } = useMutation({
     mutationFn: addPost,
+    /*
     onSuccess: (newData) => {
-      // queryClient.invalidateQueries({ queryKey: ["posts"] });
+      // Invalidate query cache
+      // queryClient.invalidateQueries({ queryKey: ["posts"] }); 
+
+      // updates from mutation response
+      // queryClient.setQueryData(["posts"], (oldQueryData) => {
+      //   return {
+      //     ...oldQueryData,
+      //     data: [...oldQueryData.data, newData.data],
+      //   };
+      // });
+    },
+    */
+
+    // Optimistic Updates
+    onMutate: async (newPost) => {
+      await queryClient.cancelQueries(["posts"]);
+      const previousPostData = queryClient.getQueryData(["posts"]);
       queryClient.setQueryData(["posts"], (oldQueryData) => {
         return {
           ...oldQueryData,
-          data: [...oldQueryData.data, newData.data],
+          data: [
+            ...oldQueryData.data,
+            { ...newPost, id: String(oldQueryData.data.length + 1) },
+          ],
         };
       });
+
+      return { previousPostData };
+    },
+    onError: (error, post, context) => {
+      queryClient.setQueryData(["posts"], context.previousPostData);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 
